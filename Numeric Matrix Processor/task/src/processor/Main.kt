@@ -3,15 +3,27 @@ package processor
 fun main() {
     val (rowNum1, columnNum1) = readln().split(" ").map { it.toInt() }
     val matrix1 = fillMatrix(rowNum1, columnNum1)
-    val (rowNum2, columnNum2) = readln().split(" ").map { it.toInt() }
-    if (rowNum2 != rowNum1 || columnNum2 != columnNum1) {
-        println("ERROR")
-        return
-    }
-
-    val matrix2 = fillMatrix(rowNum2, columnNum2)
-    val resultMatrix = sumMatrix(matrix1, matrix2)
+    val multiplier = readln().toInt()
+    val resultMatrix = multiplyMatrixByNumber(matrix1, multiplier)
+//    val (rowNum2, columnNum2) = readln().split(" ").map { it.toInt() }
+//    if (rowNum2 != rowNum1 || columnNum2 != columnNum1) {
+//        println("ERROR")
+//        return
+//    }
+//
+//    val matrix2 = fillMatrix(rowNum2, columnNum2)
+//    val resultMatrix = sumMatrix(matrix1, matrix2)
     printMatrix(resultMatrix)
+}
+
+fun multiplyMatrixByNumber(matrix: Array<Array<Int>>, multiplier: Int): Array<Array<Int>> {
+    val resultMatrix = Array(matrix.size) {Array(matrix.first().size) { 0 } }
+    for (r in matrix.indices) {
+        for (c in matrix.first().indices) {
+            resultMatrix[r][c] = matrix[r][c] * multiplier
+        }
+    }
+    return resultMatrix
 }
 
 fun printMatrix(matrix: Array<Array<Int>>) {
