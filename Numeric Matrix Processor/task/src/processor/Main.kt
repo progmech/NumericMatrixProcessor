@@ -7,6 +7,7 @@ fun main() {
         println("3. Multiply matrices")
         println("4. Transpose matrix")
         println("5. Calculate a determinant")
+        println("6. Inverse matrix")
         println("0. Exit")
         print("Your choice: ")
         val choice = readln().toInt()
@@ -16,8 +17,55 @@ fun main() {
             3 -> doMatrixMultiplication()
             4 -> doMatrixTranspose()
             5 -> doDeterminant()
+            6 -> doInverse()
         }
     } while (choice != 0)
+}
+
+fun doInverse() {
+    val matrix = fillMatrix("")
+    val size = matrix.size
+    val determinant = calculateDeterminant(matrix, size, size)
+    if (determinant == 0.0) {
+        println("This matrix doesn't have an inverse.")
+        return
+    }
+    val inverse = inverseMatrix(matrix, determinant)
+    printMatrix(inverse)
+
+}
+
+fun inverseMatrix(matrix: Array<Array<Double>>, determinant: Double): Array<Array<Double>> {
+    val initialSize = matrix.size
+    val adjoint = getAdjointMatrix(matrix)
+    val inverse = Array(initialSize) {Array(initialSize) { 0.0 } }
+    for (i in 0 until initialSize) {
+        for (j in 0 until initialSize) {
+            inverse[i][j] = (adjoint[i][j] / determinant)
+        }
+    }
+    return inverse
+}
+
+fun getAdjointMatrix(matrix: Array<Array<Double>>): Array<Array<Double>> {
+    val initialSize = matrix.size
+    val adjointMatrix = Array(initialSize) {Array(initialSize) { 0.0 } }
+    if (initialSize != 1) {
+        var sign: Int
+        val minorMatrix = Array(initialSize) {Array(initialSize) { 0.0 } }
+
+        for (i in 0 until initialSize) {
+            for (j in 0 until initialSize) {
+                fillMinorMatrix(matrix, minorMatrix, i, j, initialSize)
+                sign = if ((i + j) % 2 == 0) 1 else -1
+                adjointMatrix[j][i] = (sign) * (calculateDeterminant(minorMatrix, initialSize, initialSize - 1))
+            }
+        }
+
+    }  else {
+        adjointMatrix[0][0] = 1.0
+    }
+    return adjointMatrix
 }
 
 fun doDeterminant() {
@@ -136,7 +184,7 @@ fun multiplyMatrices(m1: Array<Array<Double>>, m2: Array<Array<Double>>): Array<
     for (n in m1.indices) {
         for (k in m2.first().indices) {
             for (m in m1.first().indices) {
-                resultMatrix[n][k] += m1[n][m] * m2[m][k]
+                resultMatrix[n][k] = (resultMatrix[n][k] +m1[n][m] * m2[m][k])
             }
         }
     }
@@ -180,7 +228,7 @@ fun sumMatrices (m1: Array<Array<Double>>, m2: Array<Array<Double>>): Array<Arra
     val resultMatrix = Array(m1.size) {Array(m1.first().size) { 0.0 } }
     for (r in m1.indices) {
         for (c in m1.first().indices) {
-            resultMatrix[r][c] = m1[r][c] + m2[r][c]
+            resultMatrix[r][c] = (m1[r][c] + m2[r][c])
         }
     }
     return resultMatrix
@@ -190,7 +238,7 @@ fun <T> printMatrix(matrix: Array<Array<T>>) {
     println("The result is:")
     for (r in matrix.indices) {
         for (c in matrix.first().indices) {
-            print("${matrix[r][c]} ")
+            print(String.format("%10.2f", matrix[r][c]).padEnd(13, ' '))
         }
         println()
     }
@@ -200,7 +248,7 @@ fun multiplyMatrixByNumber(matrix: Array<Array<Double>>, multiplier: Double): Ar
     val resultMatrix = Array(matrix.size) {Array(matrix.first().size) { 0.0 } }
     for (r in matrix.indices) {
         for (c in matrix.first().indices) {
-            resultMatrix[r][c] = matrix[r][c] * multiplier
+            resultMatrix[r][c] = (matrix[r][c] * multiplier)
         }
     }
     return resultMatrix
