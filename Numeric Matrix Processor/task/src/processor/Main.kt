@@ -5,6 +5,7 @@ fun main() {
         println("1. Add matrices")
         println("2. Multiply matrix by a constant")
         println("3. Multiply matrices")
+        println("4. Transpose matrix")
         println("0. Exit")
         print("Your choice: ")
         val choice = readln().toInt()
@@ -12,8 +13,70 @@ fun main() {
             1 -> doMatrixAddition()
             2 -> doMatrixMultiplicationByConstant()
             3 -> doMatrixMultiplication()
+            4 -> doMatrixTranspose()
         }
     } while (choice != 0)
+}
+
+fun doMatrixTranspose() {
+    println("1. Main diagonal")
+    println("2. Side diagonal")
+    println("3. Vertical line")
+    println("4. Horizontal line")
+    print("Your choice: ")
+    val choice = readln().toInt()
+    val matrix = fillMatrix("")
+    when (choice) {
+        1 -> transposeMain(matrix)
+        2 -> transposeSide(matrix)
+        3 -> transposeVertical(matrix)
+        4 -> transposeHorizontal(matrix)
+        else -> println("Incorrect choice.")
+    }
+}
+
+fun transposeHorizontal(matrix: Array<Array<Double>>) {
+    val resultMatrix = Array(matrix.size) {Array(matrix.first().size) { 0.0 } }
+    val maxRow = resultMatrix.lastIndex
+    for (r in matrix.indices) {
+        for (c in matrix.first().indices) {
+            resultMatrix[maxRow - r][c] = matrix[r][c]
+        }
+    }
+    printMatrix(resultMatrix)
+}
+
+fun transposeVertical(matrix: Array<Array<Double>>) {
+    val resultMatrix = Array(matrix.size) {Array(matrix.first().size) { 0.0 } }
+    val maxColumn = resultMatrix.first().lastIndex
+    for (r in matrix.indices) {
+        for (c in matrix.first().indices) {
+            resultMatrix[r][maxColumn - c] = matrix[r][c]
+        }
+    }
+    printMatrix(resultMatrix)
+}
+
+fun transposeSide(matrix: Array<Array<Double>>) {
+    val resultMatrix = Array(matrix.first().size) {Array(matrix.size) { 0.0 } }
+    val maxRow = resultMatrix.lastIndex
+    val maxColumn = resultMatrix.first().lastIndex
+    for (r in matrix.indices) {
+        for (c in matrix.first().indices) {
+            resultMatrix[maxColumn - c][maxRow - r] = matrix[r][c]
+        }
+    }
+    printMatrix(resultMatrix)
+}
+
+fun transposeMain(matrix: Array<Array<Double>>){
+    val resultMatrix = Array(matrix.first().size) {Array(matrix.size) { 0.0 } }
+    for (r in matrix.indices) {
+        for (c in matrix.first().indices) {
+            resultMatrix[c][r] = matrix[r][c]
+        }
+    }
+    printMatrix(resultMatrix)
 }
 
 fun doMatrixMultiplication() {
