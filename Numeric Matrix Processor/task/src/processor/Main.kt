@@ -6,6 +6,7 @@ fun main() {
         println("2. Multiply matrix by a constant")
         println("3. Multiply matrices")
         println("4. Transpose matrix")
+        println("5. Calculate a determinant")
         println("0. Exit")
         print("Your choice: ")
         val choice = readln().toInt()
@@ -14,8 +15,48 @@ fun main() {
             2 -> doMatrixMultiplicationByConstant()
             3 -> doMatrixMultiplication()
             4 -> doMatrixTranspose()
+            5 -> doDeterminant()
         }
     } while (choice != 0)
+}
+
+fun doDeterminant() {
+    val matrix = fillMatrix("")
+    println("The result is:\n${calculateDeterminant(matrix, matrix.size, matrix.size)}")
+}
+
+fun calculateDeterminant(matrix: Array<Array<Double>>, initialSize:Int, currentSize: Int): Double {
+    if (currentSize == 1) {
+        return matrix[0][0]
+    }
+
+    var sign = 1
+    var determinant = 0.0
+    val minorMatrix = Array(initialSize) {Array(initialSize) { 0.0 } }
+
+    for (exColumn in 0 until currentSize) {
+        fillMinorMatrix(matrix, minorMatrix, 0, exColumn, currentSize)
+        determinant += sign * matrix[0][exColumn] * calculateDeterminant(minorMatrix, initialSize, currentSize - 1)
+        sign = -sign
+    }
+
+    return determinant
+}
+
+fun fillMinorMatrix(matrix: Array<Array<Double>>, minorMatrix: Array<Array<Double>>, exRow: Int, exColumn: Int, currentSize: Int) {
+    var i = 0
+    var j = 0
+    for (row in 0 until currentSize) {
+        for (column in 0 until currentSize) {
+            if (row != exRow && column != exColumn) {
+                minorMatrix[i][j++] = matrix[row][column]
+                if (j == currentSize - 1) {
+                    j = 0
+                    i++
+                }
+            }
+        }
+    }
 }
 
 fun doMatrixTranspose() {
